@@ -1,10 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Home | Fashion</title>
-  </head>
-  <body>
-    Welcome to ythe page home
-    <a href="page1.html">Connection</a>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home | Fashion</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff; /* Blanc pour le fond */
+      color: #14171A; /* Couleur texte Twitter */
+    }
+    header {
+      background-color: #1DA1F2; /* Bleu Twitter */
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    header .btn-login {
+      text-decoration: none;
+      color: #1DA1F2;
+      background-color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    header .btn-login:hover {
+      background-color: #1DA1F2;
+      color: white;
+    }
+    main {
+      text-align: center;
+      padding: 50px;
+    }
+    a {
+      color: #1DA1F2;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Fashion</div>
+    <a href="page1.html" class="btn-login">Login</a>
+  </header>
+  <main>
+    <h1>Welcome to the Fashion Home Page</h1>
+    <p>Explore the latest trends and styles in fashion. <a href="page1.html">Connect now</a> to get started.</p>
+  </main>
+</body>
 </html>
