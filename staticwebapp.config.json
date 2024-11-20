@@ -1,5 +1,17 @@
 {
-    "auth": {
+  "routes": [
+      {
+        "route": "/page1.html",
+        "allowedRoles": ["authenticated"]
+      }
+    ],
+    "responseOverrides": {
+      "401": {
+        "statusCode": 302,
+        "redirect": "/.auth/login/aadb2c/callback"
+      }
+    },  
+  "auth": {
       "identityProviders": {
         "customOpenIdConnectProviders": {
           "aadb2c": {
