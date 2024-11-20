@@ -12,7 +12,7 @@
   "responseOverrides": {
     "401": {
       "statusCode": 302,
-      "redirect": "/.auth/login/aadb2c?post_login_redirect_uri=/page1.html"
+      "redirect": "/.auth/login/aadb2c"
     }
   },
   "navigationFallback": {
@@ -32,9 +32,8 @@
             }
           },
           "login": {
-            "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-            "scopes": ["openid", "profile", "email"],
-            "loginParameterNames": []
+            "nameClaimType": "emails",
+            "scopes": ["openid"]
           }
         }
       }
