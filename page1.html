@@ -28,18 +28,15 @@
         const data = await response.json();
 
         if (data && data.length > 0) {
-          const user = data[0];
+          const clientPrincipal = data[0].clientPrincipal;
           const userInfoDiv = document.getElementById('user-info');
-          userInfoDiv.innerHTML = '<h2>User Information</h2>';
-          
-          const userDetailsList = document.createElement('ul');
-          Object.entries(user).forEach(([key, value]) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${key}: ${JSON.stringify(value, null, 2)}`;
-            userDetailsList.appendChild(listItem);
-          });
-          
-          userInfoDiv.appendChild(userDetailsList);
+
+          if (clientPrincipal) {
+            userInfoDiv.innerHTML = '<h2>Complete User Token</h2>';
+            userInfoDiv.innerHTML += `<pre>${JSON.stringify(clientPrincipal, null, 2)}</pre>`;
+          } else {
+            userInfoDiv.innerText = 'No user information available.';
+          }
         } else {
           document.getElementById('user-info').innerText = 'No user information available.';
         }
