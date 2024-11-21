@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Page</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <header>
     <div class="logo">IAM</div>
@@ -14,6 +16,42 @@
   <main>
     <h1>Welcome to the User Page</h1>
     <p>Your current status: <strong>Member</strong></p>
+    <div id="user-info">
+      <p>Loading user information...</p>
+    </div>
   </main>
+
+  <script>
+    async function fetchUserData() {
+      try {
+        const response = await fetch('/.auth/me');
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+          const user = data[0];
+          const userInfoDiv = document.getElementById('user-info');
+          userInfoDiv.innerHTML = '<h2>User Information</h2>';
+          
+          const userDetailsList = document.createElement('ul');
+          Object.entries(user).forEach(([key, value]) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${key}: ${JSON.stringify(value, null, 2)}`;
+            userDetailsList.appendChild(listItem);
+          });
+          
+          userInfoDiv.appendChild(userDetailsList);
+        } else {
+          document.getElementById('user-info').innerText = 'No user information available.';
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        document.getElementById('user-info').innerText = 'Error loading user information.';
+      }
+    }
+
+    // Fetch user data when the page loads
+    window.onload = fetchUserData;
+  </script>
 </body>
+
 </html>
