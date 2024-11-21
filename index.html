@@ -13,7 +13,7 @@
     <div class="logo">IAM</div>
     <nav>
       <a href="/">Home</a>
-      <a href="page1.html">User Page</a> <!-- Ajout du lien vers la page page1.html -->
+      <a href="page1.html">User Page</a> <!-- Lien vers la page utilisateur -->
     </nav>
     <div id="auth-section">
       <a href="page1.html" class="btn-login">Login</a>
@@ -24,27 +24,8 @@
     <p>If you sign up, you will be granted the <strong>Member</strong> role with basic permissions.</p>
   </main>
 
-  <script>
-    async function checkUserStatus() {
-      try {
-        const response = await fetch('/.auth/me');
-        const data = await response.json();
-
-        const authSection = document.getElementById('auth-section');
-        if (data && data.clientPrincipal) {
-          const userDetails = data.clientPrincipal.userDetails;
-
-          // Remplacer le bouton Login par "Hello <username>"
-          authSection.innerHTML = `<span>Hello, ${userDetails}</span>`;
-        }
-      } catch (error) {
-        console.error('Error checking user status:', error);
-      }
-    }
-
-    // Vérifier l'état de connexion au chargement de la page
-    window.onload = checkUserStatus;
-  </script>
+  <!-- Inclusion du fichier JavaScript -->
+  <script src="auth.js"></script>
 </body>
 
 </html>

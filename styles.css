@@ -51,11 +51,34 @@ main p {
   font-size: 1rem;
 }
 
+/* Global Link Styles */
 a {
-  color: #1DA1F2;
+  color: #1DA1F2; /* Contraste élevé */
+  font-weight: bold;
   text-decoration: none;
 }
 
 a:hover {
+  text-decoration: underline;
+}
+
+/* Ensure links in the header are visible */
+header nav a {
+  margin-right: 15px;
+  color: white; /* Liens dans le header en blanc */
+  font-size: 1rem;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* Footer or alternate link visibility */
+footer a {
+  color: #1DA1F2; /* Contraste élevé pour les liens */
+  font-weight: bold;
+}
+
+footer a:hover {
   text-decoration: underline;
 }
