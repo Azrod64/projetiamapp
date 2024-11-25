@@ -29,9 +29,7 @@
           "login": {
             "nameClaimType": "emails",
             "scopes": [
-              "openid",
-              "profile",
-              "https://graph.microsoft.com/Directory.Read.All"
+              "openid"
             ]
           }
         }

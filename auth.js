@@ -3,44 +3,46 @@ async function fetchUserData() {
     const response = await fetch('/.auth/me');
     const data = await response.json();
 
-    console.log("Données utilisateur :", data); // Vérifiez le contenu
-  } catch (error) {
-    console.error("Erreur lors de la récupération des données utilisateur :", error);
-  }
-}
+    const authSection = document.getElementById('auth-section');
+    if (data && data.clientPrincipal) {
+      const userDetails = data.clientPrincipal.userDetails;
 
+      // Message de bienvenue
+      authSection.innerHTML = `<p>Bonjour, ${userDetails}!</p>`;
 
-async function fetchGraphData(accessToken, endpoint) {
-  try {
-    const response = await fetch(endpoint, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
+      // Récupérer les groupes depuis l'API Graph
+      const groups = await fetchUserGroups(data.clientPrincipal.accessToken);
+
+      // Afficher les groupes
+      if (groups.length > 0) {
+        authSection.innerHTML += `<p>Vos groupes : ${groups.join(', ')}</p>`;
+      } else {
+        authSection.innerHTML += `<p>Aucun groupe trouvé.</p>`;
       }
-    });
-    return await response.json();
-  } catch (error) {
-    console.error(`Erreur lors de la récupération des données depuis ${endpoint} :`, error);
-    return {};
-  }
-}
-
-async function fetchGraphPhoto(accessToken) {
-  try {
-    const response = await fetch("https://graph.microsoft.com/v1.0/me/photo/$value", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-    if (response.ok) {
-      const blob = await response.blob();
-      return URL.createObjectURL(blob);
     }
-    return null;
   } catch (error) {
-    console.error("Erreur lors de la récupération de la photo :", error);
-    return null;
+    console.error('Erreur lors de la récupération des données utilisateur :', error);
   }
 }
 
-// Vérifier les données utilisateur au chargement de la page
+async function fetchUserGroups(accessToken) {
+  try {
+    const response = await fetch('https://graph.microsoft.com/v1.0/me/memberOf', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const data = await response.json();
+
+    // Extraire les noms des groupes
+    if (data.value && data.value.length > 0) {
+      return data.value.map(group => group.displayName);
+    }
+    return [];
+  } catch (error) {
+    console.error('Erreur lors de la récupération des groupes :', error);
+    return [];
+  }
+}
+
 window.onload = fetchUserData;
