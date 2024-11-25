@@ -7,42 +7,71 @@ async function fetchUserData() {
     if (data && data.clientPrincipal) {
       const userDetails = data.clientPrincipal.userDetails;
 
-      // Message de bienvenue
+      // Afficher un message de bienvenue
       authSection.innerHTML = `<p>Bonjour, ${userDetails}!</p>`;
 
-      // Récupérer les groupes depuis l'API Graph
-      const groups = await fetchUserGroups(data.clientPrincipal.accessToken);
+      // Appeler les différentes données disponibles via Microsoft Graph
+      const userInfo = await fetchGraphData(data.clientPrincipal.accessToken, "https://graph.microsoft.com/v1.0/me");
+      const groups = await fetchGraphData(data.clientPrincipal.accessToken, "https://graph.microsoft.com/v1.0/me/memberOf");
+      const photo = await fetchGraphPhoto(data.clientPrincipal.accessToken);
+
+      // Afficher les informations utilisateur
+      authSection.innerHTML += `<h2>Informations utilisateur :</h2>`;
+      authSection.innerHTML += `<pre>${JSON.stringify(userInfo, null, 2)}</pre>`;
 
       // Afficher les groupes
-      if (groups.length > 0) {
-        authSection.innerHTML += `<p>Vos groupes : ${groups.join(', ')}</p>`;
+      if (groups.value && groups.value.length > 0) {
+        authSection.innerHTML += `<h2>Groupes :</h2>`;
+        authSection.innerHTML += `<ul>${groups.value.map(group => `<li>${group.displayName}</li>`).join("")}</ul>`;
       } else {
         authSection.innerHTML += `<p>Aucun groupe trouvé.</p>`;
       }
+
+      // Afficher la photo de profil (si disponible)
+      if (photo) {
+        const img = document.createElement("img");
+        img.src = photo;
+        img.alt = "Photo de profil";
+        img.style.width = "100px";
+        authSection.appendChild(img);
+      }
     }
   } catch (error) {
-    console.error('Erreur lors de la récupération des données utilisateur :', error);
+    console.error("Erreur lors de la récupération des données utilisateur :", error);
   }
 }
 
-async function fetchUserGroups(accessToken) {
+async function fetchGraphData(accessToken, endpoint) {
   try {
-    const response = await fetch('https://graph.microsoft.com/v1.0/me/memberOf', {
+    const response = await fetch(endpoint, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    const data = await response.json();
-
-    // Extraire les noms des groupes
-    if (data.value && data.value.length > 0) {
-      return data.value.map(group => group.displayName);
-    }
-    return [];
+    return await response.json();
   } catch (error) {
-    console.error('Erreur lors de la récupération des groupes :', error);
-    return [];
+    console.error(`Erreur lors de la récupération des données depuis ${endpoint} :`, error);
+    return {};
   }
 }
 
+async function fetchGraphPhoto(accessToken) {
+  try {
+    const response = await fetch("https://graph.microsoft.com/v1.0/me/photo/$value", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    if (response.ok) {
+      const blob = await response.blob();
+      return URL.createObjectURL(blob);
+    }
+    return null;
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la photo :", error);
+    return null;
+  }
+}
+
+// Vérifier les données utilisateur au chargement de la page
 window.onload = fetchUserData;

@@ -20,66 +20,13 @@
 
   <main>
     <h1>Welcome to the User Page</h1>
-    <p>Your current status: <strong>Member</strong></p>
-    <div id="user-info">
+    <div id="auth-section">
       <p>Loading user information...</p>
     </div>
   </main>
 
-  <script>
-    async function fetchUserData() {
-      try {
-        const response = await fetch('/.auth/me');
-        const data = await response.json();
-
-        const userInfoDiv = document.getElementById('user-info');
-        if (data && data.clientPrincipal) {
-          const userDetails = data.clientPrincipal.userDetails;
-
-          // Message de bienvenue
-          userInfoDiv.innerHTML = `<p>Hello, ${userDetails}!</p>`;
-
-          // Appeler l'API Graph pour récupérer les groupes
-          const groups = await fetchUserGroups(data.clientPrincipal.accessToken);
-
-          // Afficher les groupes
-          if (groups.length > 0) {
-            userInfoDiv.innerHTML += `<p>Your groups: ${groups.join(', ')}</p>`;
-          } else {
-            userInfoDiv.innerHTML += `<p>No groups found.</p>`;
-          }
-        } else {
-          userInfoDiv.innerText = 'No user data available.';
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        document.getElementById('user-info').innerText = 'Error loading user information.';
-      }
-    }
-
-    async function fetchUserGroups(accessToken) {
-      try {
-        const response = await fetch('https://graph.microsoft.com/v1.0/me/memberOf', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        });
-        const data = await response.json();
-
-        // Extraire les noms des groupes
-        if (data.value && data.value.length > 0) {
-          return data.value.map(group => group.displayName);
-        }
-        return [];
-      } catch (error) {
-        console.error('Error fetching groups:', error);
-        return [];
-      }
-    }
-
-    // Récupérer les données utilisateur au chargement de la page
-    window.onload = fetchUserData;
-  </script>
+  <!-- Inclusion du fichier auth.js -->
+  <script src="auth.js"></script>
 </body>
 
 </html>
